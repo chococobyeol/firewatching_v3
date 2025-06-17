@@ -11,7 +11,7 @@ class FireControls {
         this.defaultValues = {
             scale: 0.9,
             positionX: 0,
-            positionY: 140,
+            positionY: -160,
             nightSky: true,
             backgroundImage: true,
             magnitude: 1.6,
@@ -224,8 +224,8 @@ class FireControls {
                         <div class="setting-item">
                             <label style="color:#fff;margin-bottom:6px;display:block;font-size:13px;">Y 위치</label>
                             <div class="slider-container">
-                                <input id="positionY" type="range" min="-300" max="300" step="5" value="${this.currentValues.positionY}" class="modern-slider">
-                                <span id="positionY-value" class="value-display">${this.currentValues.positionY}</span>
+                                <input id="positionY" type="range" min="-300" max="300" step="5" value="${this.currentValues.positionY + 300}" class="modern-slider">
+                                <span id="positionY-value" class="value-display">${this.currentValues.positionY + 300}</span>
                             </div>
                         </div>
                         
@@ -628,8 +628,10 @@ class FireControls {
         });
 
         this.setupSlider('positionY', (value) => {
-            this.currentValues.positionY = value;
-            this.updateCanvasPosition(this.currentValues.positionX, value);
+            // slider 값(value)을 실제 positionY로 변환 (value - 300)
+            const actualY = value - 300;
+            this.currentValues.positionY = actualY;
+            this.updateCanvasPosition(this.currentValues.positionX, actualY);
             this.saveSettings();
         });
 
@@ -1076,23 +1078,37 @@ class FireControls {
     updateAllDisplayValues() {
         Object.keys(this.currentValues).forEach(key => {
             const value = this.currentValues[key];
-            
-            // 슬라이더 값 업데이트
             const slider = document.getElementById(key);
-            if (slider && slider.type === 'range') {
-                slider.value = value;
-            }
-            
-            // 표시값 업데이트
             const valueSpan = document.getElementById(key + '-value');
-            if (valueSpan) {
-                if (typeof value === 'number') {
-                    // 정수 step인지 확인하여 표시 형식 결정
-                    if (slider && slider.step && parseFloat(slider.step) >= 1) {
-                        valueSpan.textContent = value.toFixed(0);
-                    } else {
-                        valueSpan.textContent = value.toFixed(2);
+            
+            // 슬라이더 값 업데이트 및 표시값 업데이트
+            if (slider && slider.type === 'range') {
+                if (key === 'positionY') {
+                    // slider 범위 [-300,300], slider.value = actual + 300
+                    const sliderVal = value + 300;
+                    slider.value = sliderVal;
+                    if (valueSpan) {
+                        valueSpan.textContent = sliderVal.toFixed(0);
                     }
+                } else {
+                    slider.value = value;
+                    if (valueSpan) {
+                        if (typeof value === 'number') {
+                            // 정수 step인지 확인하여 표시 형식 결정
+                            if (slider.step && parseFloat(slider.step) >= 1) {
+                                valueSpan.textContent = value.toFixed(0);
+                            } else {
+                                valueSpan.textContent = value.toFixed(2);
+                            }
+                        } else {
+                            valueSpan.textContent = value;
+                        }
+                    }
+                }
+            } else if (valueSpan) {
+                // 슬라이더가 없거나 다른 타입인 경우 기본 표시
+                if (typeof value === 'number') {
+                    valueSpan.textContent = value.toFixed(2);
                 } else {
                     valueSpan.textContent = value;
                 }
