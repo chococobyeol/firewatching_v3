@@ -19,8 +19,8 @@
 ## 설치 및 실행
 1. 리포지토리 복제:
    ```bash
-   git clone https://github.com/<사용자명>/bulmeong3.git
-   cd bulmeong3
+   git clone https://github.com/chococobyeol/firewatching_v3.git
+   cd firewatching_v3
    ```
 2. 로컬 서버 실행 (간단한 HTTP 서버 사용 권장):
    ```bash
@@ -31,7 +31,7 @@
 
 ## 디렉토리 구조
 ```
-bulmeong3/
+firewatching_v3/
 ├─ index.html          # 메인 페이지
 ├─ privacy.html        # 개인정보처리방침
 ├─ styles.css          # 전역 스타일
@@ -71,4 +71,4 @@ MIT 라이선스
 
 ## 연락처
 - Email: chococobyeol@gmail.com
-- GitHub: https://github.com/<사용자명>/bulmeong3
+- GitHub: https://github.com/chococobyeol/firewatching_v3
